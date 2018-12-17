@@ -17,7 +17,7 @@ def main():
 
 
 def helm_init():
-    if not path.isfile(path.join(path.expanduser("~"), '.helm')):
+    if not path.isdir(path.join(path.expanduser("~"), '.helm')):
         helm(['init', '--client-only'])
 
 
