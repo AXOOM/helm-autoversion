@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-
+import os
 import re
 import subprocess
 import sys
-from os import path, os
+from os import path
 
 
 def main():
@@ -31,11 +31,14 @@ def helm(args, version=None, capture_output=False):
     zi_args.extend(['http://repo.roscidus.com/kubernetes/helm'])
     zi_args.extend(args)
 
-    if capture_output:
-        process = subprocess.run(zi_args, check=True, stdout=subprocess.PIPE, universal_newlines=True)
-        return process.stdout
-    else:
-        subprocess.run(zi_args, check=True)
+    try:
+        if capture_output:
+            process = subprocess.run(zi_args, check=True, stdout=subprocess.PIPE, universal_newlines=True)
+            return process.stdout
+        else:
+            subprocess.run(zi_args, check=True)
+    except subprocess.CalledProcessError as ex:
+        sys.exit(ex.returncode)
 
 
 if __name__ == '__main__':
