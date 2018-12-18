@@ -3,7 +3,7 @@
 import re
 import subprocess
 import sys
-from os import path
+from os import path, os
 
 
 def main():
@@ -17,7 +17,8 @@ def main():
 
 
 def helm_init():
-    if not path.isdir(path.join(path.expanduser("~"), '.helm')):
+    helm_home = os.getenv('HELM_HOME', path.join(path.expanduser("~"), '.helm'))
+    if not path.isdir(helm_home):
         helm(['init', '--client-only'])
 
 
