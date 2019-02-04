@@ -19,7 +19,7 @@ def main():
 def helm_init():
     helm_home = os.getenv('HELM_HOME', path.join(path.expanduser("~"), '.helm'))
     if not path.isdir(helm_home):
-        helm(['init', '--client-only'])
+        helm(['init', '--client-only'], capture_output=True)
 
 
 def helm(args, version=None, capture_output=False):
