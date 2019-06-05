@@ -7,19 +7,8 @@ from os import path
 
 
 def main():
-    tiller_version = None
-    if 'package' not in sys.argv[1:] and 'repo' not in sys.argv[1:] and 'fetch' not in sys.argv[1:]:
-        output = helm(['version', '--server'], capture_output=True)
-        tiller_version = re.search(r'SemVer:"v(?P<version>[^"]*)"', output).group('version')
-
     helm_init()
-    helm(sys.argv[1:], version=tiller_version)
-
-
-def helm_init():
-    helm_home = os.getenv('HELM_HOME', path.join(path.expanduser("~"), '.helm'))
-    if not path.isdir(helm_home):
-        helm(['init', '--client-only'], capture_output=True)
+    helm(sys.argv[1:], version=get_version())
 
 
 def helm(args, version=None, capture_output=False):
@@ -39,6 +28,21 @@ def helm(args, version=None, capture_output=False):
             subprocess.run(zi_args, check=True)
     except subprocess.CalledProcessError as ex:
         sys.exit(ex.returncode)
+
+
+def helm_init():
+    helm_home = os.getenv('HELM_HOME', path.join(path.expanduser("~"), '.helm'))
+    if not path.isdir(helm_home):
+        helm(['init', '--client-only'], capture_output=True)
+
+
+def get_version():
+    tiller_dependant_commands = ['list', 'ls', 'get', 'status', 'history', 'hist', 'install', 'upgrade', 'test', 'rollback', 'delete', 'del']
+    if any(x in tiller_dependant_commands for x in sys.argv[1:]):
+        output = helm(['version', '--server'], capture_output=True)
+        return re.search(r'SemVer:"v(?P<version>[^"]*)"', output).group('version')
+    else:
+        return None
 
 
 if __name__ == '__main__':
