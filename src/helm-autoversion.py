@@ -8,7 +8,8 @@ from os import path
 
 def main():
     tiller_version = None
-    if 'package' not in sys.argv[1:] and 'repo' not in sys.argv[1:] and 'fetch' not in sys.argv[1:]:
+    ignore_commands = ['package', 'repo', 'fetch', 'init']
+    if any(elem in ignore_commands for elem in sys.argv[1:]):
         output = helm(['version', '--server'], capture_output=True)
         tiller_version = re.search(r'SemVer:"v(?P<version>[^"]*)"', output).group('version')
 
