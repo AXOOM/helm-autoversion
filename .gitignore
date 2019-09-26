@@ -1,9 +1,0 @@
-*.tgz
-*.xml
-
-*.pyc
-__pycache__/
-venv/
-
-.vscode/
-.idea/
